@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApis.Context;
 
@@ -10,9 +11,11 @@ using TodoApis.Context;
 namespace TodoApis.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    partial class TodoContextModelSnapshot : ModelSnapshot
+    [Migration("20250806101122_UpdatedListTable")]
+    partial class UpdatedListTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,30 +64,9 @@ namespace TodoApis.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("listId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("listId");
-
                     b.ToTable("Tasks");
-                });
-
-            modelBuilder.Entity("TodoApis.Model.TodoTask", b =>
-                {
-                    b.HasOne("TodoApis.Model.TodoList", "list")
-                        .WithMany("tasks")
-                        .HasForeignKey("listId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("list");
-                });
-
-            modelBuilder.Entity("TodoApis.Model.TodoList", b =>
-                {
-                    b.Navigation("tasks");
                 });
 #pragma warning restore 612, 618
         }

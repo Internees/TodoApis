@@ -22,8 +22,6 @@ namespace TodoApis.Controllers
             _context = context;
         }
 
-        // GET:/Todo/Tasks
-        [HttpGet]
         [HttpGet("Tasks")]
         public async Task<ActionResult<IEnumerable<TodoTask>>> GetTasks()
         {
@@ -108,5 +106,90 @@ namespace TodoApis.Controllers
         {
             return _context.Tasks.Any(e => e.Id == id);
         }
+
+        // GET: Todo/Lists
+        [HttpGet("Lists")]
+        public async Task<ActionResult<IEnumerable<TodoList>>> GetTodos()
+        {
+            return await _context.Lists.ToListAsync();
+        }
+
+        // GET: Todo/Lists/5
+        [HttpGet("Lists/{id}")]
+        public async Task<ActionResult<TodoList>> GetTodoList(int id)
+        {
+            var todoList = await _context.Lists.FindAsync(id);
+
+            if (todoList == null)
+            {
+                return NotFound();
+            }
+
+            return todoList;
+        }
+
+        // PUT: Todo/Lists/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("Lists/{id}")]
+        public async Task<IActionResult> PutTodoList(int id, TodoList todoList)
+        {
+            if (id != todoList.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(todoList).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TodoListExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // POST: Todo/Lists
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("Lists")]
+        public async Task<ActionResult<TodoList>> PostTodoList(TodoList todoList)
+        {
+            _context.Lists.Add(todoList);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetTodoList", new { id = todoList.Id }, todoList);
+        }
+
+        // DELETE: Todo/Lists/5
+        [HttpDelete("Lists/{id}")]
+        public async Task<IActionResult> DeleteTodoList(int id)
+        {
+            var todoList = await _context.Lists.FindAsync(id);
+            if (todoList == null)
+            {
+                return NotFound();
+            }
+
+            _context.Lists.Remove(todoList);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool TodoListExists(int id)
+        {
+            return _context.Lists.Any(e => e.Id == id);
+        }
+
     }
 }

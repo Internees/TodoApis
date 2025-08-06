@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApis.Context;
 
@@ -10,9 +11,11 @@ using TodoApis.Context;
 namespace TodoApis.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    partial class TodoContextModelSnapshot : ModelSnapshot
+    [Migration("20250806100347_AddedList")]
+    partial class AddedList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,11 +26,11 @@ namespace TodoApis.Migrations
 
             modelBuilder.Entity("TodoApis.Model.TodoList", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ListId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ListId"));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -37,7 +40,7 @@ namespace TodoApis.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ListId");
 
                     b.ToTable("Lists");
                 });
@@ -61,30 +64,26 @@ namespace TodoApis.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("listId")
+                    b.Property<int?>("TodoListListId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("listId");
+                    b.HasIndex("TodoListListId");
 
                     b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("TodoApis.Model.TodoTask", b =>
                 {
-                    b.HasOne("TodoApis.Model.TodoList", "list")
-                        .WithMany("tasks")
-                        .HasForeignKey("listId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("list");
+                    b.HasOne("TodoApis.Model.TodoList", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("TodoListListId");
                 });
 
             modelBuilder.Entity("TodoApis.Model.TodoList", b =>
                 {
-                    b.Navigation("tasks");
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }
