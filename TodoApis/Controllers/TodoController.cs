@@ -80,6 +80,8 @@ namespace TodoApis.Controllers
         [HttpPost("Tasks")]
         public async Task<ActionResult<TodoTask>> PostTodoTask(TodoTask todoTask)
         {
+            Console.WriteLine($"Received Task: {todoTask.Title}, {todoTask.Description}, Status: {todoTask.Status}");
+
             _context.Tasks.Add(todoTask);
             await _context.SaveChangesAsync();
 

@@ -8,6 +8,6 @@ namespace TodoApis.Model
         [Required]
         public string Title { get; set; }
         public string Description { get; set; }
-        public bool TaskStatus { get; set; } = false;
+        public bool Status { get; set; } 
     }
 }
